@@ -16,7 +16,7 @@ const connectDatabase = async () => {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
-
+    console.log(process.env.DB_URL);
     isConnected = conn.connections[0].readyState;
     console.log(`MongoDB is connected with ${conn.connection.host}`);
     return conn;
