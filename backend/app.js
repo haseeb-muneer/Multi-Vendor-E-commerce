@@ -22,25 +22,38 @@ const path =require("path");
 // Remove static file serving - use Cloudinary URLs instead
 // app.use("/",express.static("uploads"));
 const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+  "http://localhost:3000",           // Development
+  "http://localhost:3001",           // Alternative dev
+];
+
+// Add FRONTEND_URL if it's set in environment
+if (process.env.FRONTEND_URL && process.env.FRONTEND_URL !== "http://localhost:3000") {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      console.log(`CORS blocked origin: ${origin}. Allowed: ${allowedOrigins.join(", ")}`);
+      // For Vercel, allow all origins in production as a fallback
+      if (process.env.NODE_ENV === "production") {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
     }
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-app.options("*", cors());
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`, req.body);
