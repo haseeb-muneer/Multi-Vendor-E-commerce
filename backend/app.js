@@ -22,10 +22,10 @@ const path =require("path");
 // Remove static file serving - use Cloudinary URLs instead
 // app.use("/",express.static("uploads"));
 const allowedOrigins = [
-  "http://localhost:3000",           // Development
-  "http://localhost:3001",           // Alternative dev
-  process.env.FRONTEND_URL,          // Production (e.g., https://yourapp.vercel.app)
-];
+  "http://localhost:3000",
+  "http://localhost:3001",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -36,9 +36,11 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+app.options("*", cors());
 app.use(express.json());
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`, req.body);
