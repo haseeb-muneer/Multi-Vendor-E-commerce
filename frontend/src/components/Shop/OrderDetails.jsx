@@ -7,6 +7,7 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../utils/imageUrl";
 
 function OrderDetails() {
   const { orders, isLoading } = useSelector((state) => state.order);
