@@ -12,54 +12,53 @@ const sendToken=require("../utils/sendToken");
 const { isAuthenticated } = require('../middleware/auth');
 const cloudinary = require("cloudinary");
 router.post("/create-user" , upload.single("file") , async (req,res , next)=>{
-    console.log(req.body);
-    console.log(req.file);
-    console.log(process.env.ACTIVATION_SECRET);
-    const {name , email , password}=req.body;
-    const userEmail=await User.findOne({email});
-    console.log(userEmail);
-    if(userEmail){
-        const filename=req.file.filename;
-        const filePath=`uploads/${filename}`;
-        fs.unlink(filePath , (err)=>{
-            if(err){
-                console.log(err);
-                res.status(500).json({message:"Error deleting file"});
-            }
-        })
-        return next(new ErrorHandler("User already exist" , 400));
+    try {
+        console.log(req.body);
+        console.log(req.file);
+        console.log(process.env.ACTIVATION_SECRET);
+        const {name , email , password}=req.body;
+        const userEmail=await User.findOne({email});
+        console.log(userEmail);
+        if(userEmail){
+            return next(new ErrorHandler("User already exist" , 400));
+        }
+        // Upload avatar to Cloudinary
+        let avatarUrl = "";
+        if (req.file) {
+            const fileString = req.file.buffer.toString("base64");
+            const dataURI = `data:${req.file.mimetype};base64,${fileString}`;
+            const myCloud = await cloudinary.v2.uploader.upload(dataURI, {
+                folder: "E-Shop/avatars",
+                resource_type: "auto",
+            });
+            avatarUrl = myCloud.secure_url;
+        }
+        const user={
+            fullName:name,
+            email:email,
+            password:password,
+            avatar:avatarUrl,
+        }
+        const createActivationToken=(user)=>{
+            return jwt.sign(user , process.env.ACTIVATION_SECRET,{
+                expiresIn:"5m",
+            })
+        }
+        const activationToken=createActivationToken(user);
+        const activationurl=`${process.env.FRONTEND_URL}/activation/${activationToken}`;
         
+        await sendMail({
+            email:user.email,
+            subject:"Activate your account",
+            message:`Hello ${user.fullName}.please click on the link to activate your account: ${activationurl}`,
+        })
+        res.status(201).json({
+            success:true,
+            message:`please check your email ${user.email} to activate your account`,
+        })
+    } catch(err){
+        next(new ErrorHandler(err.message , 500));
     }
-    const filename=req.file.filename;
-    const fileurl=path.join(filename);
-    console.log(fileurl);
-    const user={
-        fullName:name,
-        email:email,
-        password:password,
-        avatar:fileurl,
-    }
-    const createActivationToken=(user)=>{  //create activation token
-   return jwt.sign(user , process.env.ACTIVATION_SECRET,{
-        expiresIn:"5m",
-    })
-}
-  const activationToken=createActivationToken(user);
-  const activationurl=`${process.env.FRONTEND_URL}/activation/${activationToken}`;
-  try{
-    await sendMail({
-        email:user.email,
-        subject:"Activate your account",
-        message:`Hello ${user.fullName}.please click on the link to activate your account: ${activationurl}`,
-    })
-    res.status(201).json({
-        success:true,
-        message:`please check your email ${user.email} to activate your account`,
-    })
-  }catch(err){
-    next(new ErrorHandler(err.message , 500));
-  }
-  
 })
 router.post("/activation",catchAsyncErrors(async (req,res,next)=>{
  try{
