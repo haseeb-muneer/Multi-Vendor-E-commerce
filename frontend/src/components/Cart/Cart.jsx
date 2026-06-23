@@ -5,7 +5,7 @@ import styles from '../../styles/styles'
 import {IoBagHandleOutline} from "react-icons/io5";
 import {HiPlus , HiOutlineMinus} from "react-icons/hi";
 import {Link} from "react-router-dom";
-import { backend_url } from '../../server';
+import { getImageUrl } from '../../utils/imageUrl';
 import { useDispatch, useSelector } from 'react-redux';
 import {addToCartItem, removeFromCartItem} from "../../redux/actions/cart";
 import { toast } from 'react-toastify';
@@ -100,7 +100,7 @@ const CartSingle=({data , removeFromCartHandler , qtyChangeHandler})=>{
                       <HiOutlineMinus size={16} color="#7d879c"/>
                     </div>
                 </div>
-                <img src={`${backend_url}${data?.images[0]}`} alt='' className='w-[130px] h-min ml-2 mr-2 rounded-[5px]'/>
+                <img src={getImageUrl(data?.images?.[0])} alt='' className='w-[130px] h-min ml-2 mr-2 rounded-[5px]'/>
                 <div className='pl-[5px]'>
                     <h1>{data.name}</h1>
                     <h4 className='font-[400] text-[15px] text-[#00000082]'>${data.discountPrice} * {value}</h4>

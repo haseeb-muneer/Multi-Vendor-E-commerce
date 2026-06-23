@@ -10,7 +10,7 @@ const sendMail=require("../utils/sendMail");
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const sendToken=require("../utils/sendToken");
 const { isAuthenticated } = require('../middleware/auth');
-const cloudinary = require("cloudinary");
+const { uploadBufferToCloudinary, deleteCloudinaryImage } = require("../utils/cloudinary");
 router.post("/create-user" , upload.single("file") , async (req,res , next)=>{
     try {
         console.log(req.body);
@@ -25,12 +25,7 @@ router.post("/create-user" , upload.single("file") , async (req,res , next)=>{
         // Upload avatar to Cloudinary
         let avatarUrl = "";
         if (req.file) {
-            const fileString = req.file.buffer.toString("base64");
-            const dataURI = `data:${req.file.mimetype};base64,${fileString}`;
-            const myCloud = await cloudinary.v2.uploader.upload(dataURI, {
-                folder: "E-Shop/avatars",
-                resource_type: "auto",
-            });
+            const myCloud = await uploadBufferToCloudinary(req.file, "E-Shop/avatars");
             avatarUrl = myCloud.secure_url;
         }
         const user={
@@ -186,13 +181,10 @@ router.put(
     const existUser = await User.findById(req.user.id);
     
     // Delete old avatar from Cloudinary if exists
-    if (existUser.avatar && existUser.avatar.includes("cloudinary")) {
-      const publicId = existUser.avatar.split("/").pop().split(".")[0];
-      try {
-        await cloudinary.v2.uploader.destroy(publicId);
-      } catch (error) {
-        console.error("Error deleting old avatar:", error.message);
-      }
+    try {
+      await deleteCloudinaryImage(existUser.avatar);
+    } catch (error) {
+      console.error("Error deleting old avatar:", error.message);
     }
 
     // Upload new avatar to Cloudinary
@@ -200,13 +192,7 @@ router.put(
       return next(new ErrorHandler("No file provided", 400));
     }
 
-    const fileString = req.file.buffer.toString("base64");
-    const dataURI = `data:${req.file.mimetype};base64,${fileString}`;
-
-    const myCloud = await cloudinary.v2.uploader.upload(dataURI, {
-      folder: "E-Shop/avatars",
-      resource_type: "auto",
-    });
+    const myCloud = await uploadBufferToCloudinary(req.file, "E-Shop/avatars");
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
@@ -336,3 +322,5 @@ router.get(
 );
 
 module.exports=router;
+
+

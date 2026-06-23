@@ -8,7 +8,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const Shop=require("../model/ShopModel");
 const fs = require('fs');
 const Order=require("../model/order");
-const cloudinary = require("cloudinary");
+const { uploadBufferToCloudinary, deleteCloudinaryImage } = require("../utils/cloudinary");
 router.post("/create-product" , upload.array("images") , catchAsyncErrors(async(req,res,next)=>{
     try{
    const shopId=req.body.shopId;
@@ -21,13 +21,7 @@ router.post("/create-product" , upload.array("images") , catchAsyncErrors(async(
     // Upload all images to Cloudinary
     const imagesUrls = [];
     for (const file of files) {
-      const fileString = file.buffer.toString("base64");
-      const dataURI = `data:${file.mimetype};base64,${fileString}`;
-      
-      const myCloud = await cloudinary.v2.uploader.upload(dataURI, {
-        folder: "E-Shop/products",
-        resource_type: "auto",
-      });
+      const myCloud = await uploadBufferToCloudinary(file, "E-Shop/products");
       imagesUrls.push(myCloud.secure_url);
     }
     
@@ -70,13 +64,10 @@ router.delete(
       
       // Delete images from Cloudinary
       for (const imageUrl of productData.images) {
-        if (imageUrl.includes("cloudinary")) {
-          const publicId = imageUrl.split("/").pop().split(".")[0];
-          try {
-            await cloudinary.v2.uploader.destroy(publicId);
-          } catch (error) {
-            console.error("Error deleting image from Cloudinary:", error.message);
-          }
+        try {
+          await deleteCloudinaryImage(imageUrl);
+        } catch (error) {
+          console.error("Error deleting image from Cloudinary:", error.message);
         }
       }
       
@@ -153,3 +144,5 @@ router.put("/create-new-review" , isAuthenticated , catchAsyncErrors(async (req,
   }
 }))
 module.exports=router;
+
+

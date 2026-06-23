@@ -10,7 +10,7 @@ import {
   AiOutlineEye,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { backend_url } from "../../../server";
+import { getImageUrl } from "../../../utils/imageUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlistItem, removeFromWishlistItem } from "../../../redux/actions/wishlist";
 import { toast } from "react-toastify";
@@ -59,7 +59,7 @@ function ProductCard({ data , isEvent }) {
       <div className="flex justify-end"></div>
       <Link to={isEvent===true? `/product/${data._id}?isEvent=true` : `/product/${data._id}` }>
         <img
-          src={`${backend_url}${data.images && data.images[0]}`}
+          src={getImageUrl(data.images?.[0])}
           alt=""
           className="w-full h-[170px] object-contain"
         />
@@ -129,3 +129,4 @@ function ProductCard({ data , isEvent }) {
 }
 
 export default ProductCard;
+

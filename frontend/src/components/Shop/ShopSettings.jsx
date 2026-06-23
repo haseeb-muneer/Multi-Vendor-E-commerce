@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import { AiOutlineCamera } from "react-icons/ai";
 import styles from "../../styles/styles";
 import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
-
+import { getImageUrl } from "../../utils/imageUrl";
 const ShopSettings = () => {
   const { seller } = useSelector((state) => state.seller);
   const [avatar, setAvatar] = useState();
@@ -68,7 +68,7 @@ const ShopSettings = () => {
         <div className="w-full flex items-center justify-center">
           <div className="relative">
             <img
-              src={avatar ? avatar : `${seller.avatar?.url}`}
+              src={avatar ? avatar : getImageUrl(seller?.avatar)}
               alt=""
               className="w-[200px] h-[200px] rounded-full cursor-pointer"
             />
@@ -179,3 +179,4 @@ const ShopSettings = () => {
 };
 
 export default ShopSettings;
+

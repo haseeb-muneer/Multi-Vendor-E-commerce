@@ -4,7 +4,8 @@ import { BsFillBagFill } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfShop, getAllOrdersOfUser } from "../../redux/actions/order";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
+import { getImageUrl } from "../../utils/imageUrl";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -81,7 +82,7 @@ function UserOrderDetails() {
           <div key={index} className="w-full flex items-start mb-5">
             {/* Bug 5: w-[80px] h-[80px] (was w-80px h-80px) */}
             <img
-              src={`${backend_url}/${item.images[0]}`}
+              src={getImageUrl(item.images?.[0])}
               alt={item.name}  // Bug 6: alt needs a value
               className="w-[80px] h-[80px]"
             />
@@ -118,7 +119,7 @@ function UserOrderDetails() {
             <br />
              <div className="w-full flex">
               <img
-                src={`${backend_url}/${selectedItem?.images[0]}`}
+                src={getImageUrl(selectedItem?.images?.[0])}
                 alt=""
                 className="w-[80px] h-[80px]"
               />

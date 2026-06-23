@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromWishlistItem } from '../../redux/actions/wishlist';
-import { backend_url } from '../../server';
+import { getImageUrl } from '../../utils/imageUrl';
 import { addToCartItem } from '../../redux/actions/cart';
 function WishList({setOpenWishList}) {
    const {wishlist}=useSelector((state)=>state.wishlist);
@@ -69,7 +69,7 @@ const CartSingle=({data , removeFromWishlistHandler , addToCartHandler})=>{
         <div className='border-b p-4'>
             <div className='w-full flex items-center'>
                 <RxCross1 className='cursor-pointer' onClick={()=>removeFromWishlistHandler(data)}/>
-                <img src={`${backend_url}${data?.images[0]}`} alt='' className='w-[130px] h-min ml-2 mr-2 rounded-[5px]'/>
+                <img src={getImageUrl(data?.images?.[0])} alt='' className='w-[130px] h-min ml-2 mr-2 rounded-[5px]'/>
             
                 
                 <div className='pl-[5px]'>

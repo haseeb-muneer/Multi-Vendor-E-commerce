@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
@@ -220,7 +220,7 @@ const MessageList = ({ data, index, setOpen, setCurrentChat , me , userData , se
     >
       <div className="relative">
         <img
-          src={`${backend_url}/${user?.avatar}`}
+          src={getImageUrl(user?.avatar)}
           alt=""
           className="w-[50px] h-[50px] rounded-full"
         />
@@ -254,7 +254,7 @@ const SellerInbox = ({
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
-            src={`${backend_url}/${userData?.avatar}`}
+            src={getImageUrl(userData?.avatar)}
             alt=""
             className="w-[60px] h-[60px] rounded-full"
           />
@@ -280,7 +280,7 @@ const SellerInbox = ({
             >
               {item.sender !== sellerId && (
                 <img
-                  src="http://localhost:8000/IMG_20240412_000337-1777293583324-593255495.png"
+                  src={getImageUrl(userData?.avatar)}
                   className="w-[40px] h-[40px] rounded-full mr-3"
                   alt=""
                 />
@@ -331,3 +331,4 @@ const SellerInbox = ({
 };
 
 export default ShopInbox;
+

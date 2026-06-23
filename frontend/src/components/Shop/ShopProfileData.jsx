@@ -7,7 +7,7 @@ import styles from "../../styles/styles";
 import { useSelector } from "react-redux";
 import { getAllProductShop } from "../../redux/actions/product";
 import { useDispatch } from "react-redux";
-import { backend_url } from "../../server";
+import { getImageUrl } from "../../utils/imageUrl";
 import Ratings from "../Product/Ratings";
 import { getAllEventShop } from "../../redux/actions/event";
 function ShopProfileData({ isOwner }) {
@@ -98,7 +98,7 @@ function ShopProfileData({ isOwner }) {
             allReviews.map((item, index) => (
               <div className="w-full flex my-4">
                 <img
-                  src={`${backend_url}/${item.user.avatar}`}
+                  src={getImageUrl(item.user.avatar)}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />
@@ -132,3 +132,4 @@ function ShopProfileData({ isOwner }) {
 }
 
 export default ShopProfileData;
+

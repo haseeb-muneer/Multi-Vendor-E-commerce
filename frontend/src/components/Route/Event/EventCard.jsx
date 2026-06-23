@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../../styles/styles";
 import CountDown from "./CountDown.jsx";
-import { backend_url } from "../../../server.js";
+import { getImageUrl } from "../../../utils/imageUrl";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartItem } from "../../../redux/actions/cart.js";
@@ -27,7 +27,7 @@ function EventCard({active , data} ) {
   return (
     <div className={`w-full bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2 block `}>
       <div className="w-full lg:w-[50%] m-auto">
-        <img src={`${backend_url}${ data?.images?.[0]}`} alt="" />
+        <img src={getImageUrl(data?.images?.[0])} alt="" />
       </div>
       <div className="w-full lg:w-[50%] m-auto flex flex-col justify-center">
         <h2 className={`${styles.productTitle}`}>
@@ -61,3 +61,4 @@ function EventCard({active , data} ) {
 }
 
 export default EventCard;
+

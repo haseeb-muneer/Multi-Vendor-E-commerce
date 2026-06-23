@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url } from "../../server";
+import { getImageUrl } from "../../utils/imageUrl";
 import styles from "../../styles/styles";
 import axios from "axios";
 import { server } from "../../server";
@@ -52,7 +52,7 @@ function ShopInfo({ isOwner }) {
       <div className="w-full py-5 px-3 sm:px-4">
         <div className="w-full flex items-center justify-center">
           <img
-            src={`${data.avatar?.url}`}
+            src={getImageUrl(data?.avatar)}
             alt=""
             className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] 800px:w-[150px] 800px:h-[150px] object-cover rounded-full"
           />

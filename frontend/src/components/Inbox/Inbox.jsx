@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import socketIO from "socket.io-client";
 import { formatDistanceToNow } from "date-fns";
-import { server } from "../../server";
+import { server } from "../../server";`r`nimport { getImageUrl } from "../../utils/imageUrl";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
@@ -303,7 +303,7 @@ const MessageList = ({
     >
       <div className="relative">
         <img
-          src={`${user?.avatar?.url}`}
+          src={getImageUrl(user?.avatar)}
           alt=""
           className="w-[50px] h-[50px] rounded-full"
         />
@@ -344,7 +344,7 @@ const SellerInbox = ({
       <div className="w-full flex p-3 items-center justify-between bg-slate-200">
         <div className="flex">
           <img
-            src={`${userData?.avatar?.url}`}
+            src={getImageUrl(userData?.avatar)}
             alt=""
             className="w-[60px] h-[60px] rounded-full"
           />
@@ -372,14 +372,14 @@ const SellerInbox = ({
             >
               {item.sender !== sellerId && (
                 <img
-                  src={`${userData?.avatar?.url}`}
+                  src={getImageUrl(userData?.avatar)}
                   className="w-[40px] h-[40px] rounded-full mr-3"
                   alt=""
                 />
               )}
               {item.images && (
                 <img
-                  src={`${item.images?.url}`}
+                  src={getImageUrl(item.images)}
                   className="w-[300px] h-[300px] object-cover rounded-[10px] ml-2 mb-2"
                 />
               )}
@@ -445,3 +445,4 @@ const SellerInbox = ({
 };
 
 export default Inbox;
+

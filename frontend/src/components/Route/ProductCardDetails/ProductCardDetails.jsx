@@ -9,7 +9,7 @@ import {
   AiOutlineHeart,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { backend_url } from "../../../server";
+import { getImageUrl } from "../../../utils/imageUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addToCartItem } from "../../../redux/actions/cart";
@@ -75,13 +75,13 @@ const ProductCardDetails = ({ setOpen, data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={`${backend_url}${data.images && data.images[0]}`}
+                  src={getImageUrl(data.images?.[0])}
                   alt=""
                 />
                 <div className="flex">
                   <Link to={`/shop/${seller?._id}`}>
                     <img
-                      src={`${backend_url}${data.shop?.avatar}`}
+                      src={getImageUrl(data.shop?.avatar)}
                       alt=""
                       className="h-[50px] w-[50px] rounded-full mr-2"
                     />
@@ -178,3 +178,4 @@ const ProductCardDetails = ({ setOpen, data }) => {
 };
 
 export default ProductCardDetails;
+

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { backend_url } from "../../server";
+import { getImageUrl } from "../../utils/imageUrl";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -71,7 +71,7 @@ const ProfileContent = ({ active, setActive }) => {
           <div className="w-full flex justify-center">
             <div className="relative">
               <img
-                src={`${backend_url}${user?.avatar}`}
+                src={getImageUrl(user?.avatar)}
                 className="h-[150px] w-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt=""
               />
@@ -747,3 +747,4 @@ const Address = () => {
   );
 };
 export default ProfileContent;
+
