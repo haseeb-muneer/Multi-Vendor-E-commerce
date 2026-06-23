@@ -10,6 +10,7 @@ import socketIO from "socket.io-client";
 import { formatDistanceToNowStrict } from "date-fns";
 const ENDPOINT = "http://localhost:4000";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
+import { getImageUrl } from "../../utils/imageUrl";
 function ShopInbox() {
   const { seller, isLoading } = useSelector((state) => state.seller);
   // const {user}=useSelector((state)=>state.user);
