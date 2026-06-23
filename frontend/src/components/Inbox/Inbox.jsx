@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
+import { getImageUrl } from "../../utils/imageUrl";
 import { useSelector } from "react-redux";
 import socketIO from "socket.io-client";
 import { formatDistanceToNow } from "date-fns";
