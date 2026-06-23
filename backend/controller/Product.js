@@ -8,6 +8,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const Shop=require("../model/ShopModel");
 const fs = require('fs');
 const Order=require("../model/order");
+const cloudinary = require("cloudinary");
 router.post("/create-product" , upload.array("images") , catchAsyncErrors(async(req,res,next)=>{
     try{
    const shopId=req.body.shopId;
@@ -16,11 +17,24 @@ router.post("/create-product" , upload.array("images") , catchAsyncErrors(async(
     return next(new ErrorHandler("Shop is invalid!" , 400));
    }else{
     const files=req.files;
-    const imagesUrls=files.map((file)=>`${file.filename}`);
+    
+    // Upload all images to Cloudinary
+    const imagesUrls = [];
+    for (const file of files) {
+      const fileString = file.buffer.toString("base64");
+      const dataURI = `data:${file.mimetype};base64,${fileString}`;
+      
+      const myCloud = await cloudinary.v2.uploader.upload(dataURI, {
+        folder: "E-Shop/products",
+        resource_type: "auto",
+      });
+      imagesUrls.push(myCloud.secure_url);
+    }
+    
     const productData=req.body;
     productData.images=imagesUrls;
     productData.shop=shop;
-    const product=await Product.create(productData);  //th product is objectr that is sent to frontend
+    const product=await Product.create(productData);
     res.status(201).json({
         success:true,
         product,
@@ -53,13 +67,19 @@ router.delete(
     try {
       const productId = req.params.id;
       const productData=await Product.findById(productId);
-      productData.images.forEach((imageUrl)=>{
-        const filename=imageUrl;
-        const filePath=`uploads/${filename}`;
-        fs.unlink(filePath , (err)=>{
-          console.log(err);
-        })
-      })
+      
+      // Delete images from Cloudinary
+      for (const imageUrl of productData.images) {
+        if (imageUrl.includes("cloudinary")) {
+          const publicId = imageUrl.split("/").pop().split(".")[0];
+          try {
+            await cloudinary.v2.uploader.destroy(publicId);
+          } catch (error) {
+            console.error("Error deleting image from Cloudinary:", error.message);
+          }
+        }
+      }
+      
       const product = await Product.findByIdAndDelete(productId);
 
       if (!product) {
