@@ -13,7 +13,7 @@ function ShopLogin() {
     const [visible , setVisible]=useState(false);
     const handleSubmit=async(e)=>{
      e.preventDefault();
-     await axios.post(`${server}/shop/login-shop` , {email , password}  ).then((res)=>{
+     await axios.post(`${server}/shop/login-shop` , {email , password} , {withCredentials:true} ).then((res)=>{
          toast.success("Login Successfully!");
         //  console.log(res.data);
          navigate("/dashboard");
