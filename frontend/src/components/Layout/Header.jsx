@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { categoriesData, productData } from "../../static/data";
@@ -53,13 +53,21 @@ function Header({ activeHeading }) {
     setSearchData(filteredProduct);
   };
 
-  window.addEventListener("scroll", () => {
+ useEffect(() => {
+  const handleScroll = () => {
     if (window.scrollY > 70) {
       setActive(true);
     } else {
       setActive(false);
     }
-  });
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
   return (
     <>
       <div className={`${styles.section}`}>
@@ -158,11 +166,11 @@ function Header({ activeHeading }) {
               </div>
             </div>
             <div className={`${styles.noramlFlex}`}>
-              <div className="relative mr-[15px] cursor-pointer">
+              <div className="relative mr-[15px] cursor-pointer" onClick={() => setOpenCart(true)}>
                 <AiOutlineShoppingCart
                   size={30}
                   color="rgb(255 255 255/83%)"
-                  onClick={() => setOpenCart(true)}
+                  
                 />
                 <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 top right text-white font-mono text-[12px] leading-tight text-center ">
                   {cart && cart.length}
@@ -217,28 +225,34 @@ function Header({ activeHeading }) {
               />
             </Link>
           </div>
-          <div>
-            <div className="relative mr-[20px] onClick={() => setOpenCart(true)} ">
-              <AiOutlineShoppingCart size={30}  />
-              <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 top right text-white font-mono text-[12px] leading-tight text-center ">
-                {cart && cart.length}
-              </span>
-            </div>
-          </div>
+         <div>
+  <div
+    className="relative mr-[20px] cursor-pointer"
+    onClick={() => setOpenCart(true)}
+  >
+    <AiOutlineShoppingCart size={30} />
+    <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
+      {cart && cart.length}
+    </span>
+  </div>
+</div>
         </div>
         {/* Header SideBar */}
         {open && (
           <div className="fixed w-full h-full bg-[#0000005f] z-[20] top-0 left-0">
             <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
               <div className="w-full flex justify-between pr-3">
-                <div>
-                  <div className="relative mr-[15px]" onClick={() => setOpenWishList(true)}>
-                    <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                    <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 top right text-white font-mono text-[12px] leading-tight text-center ">
-                      1
-                    </span>
-                  </div>
-                </div>
+               <div>
+  <div
+    className="relative mr-[15px] cursor-pointer"
+    onClick={() => setOpenWishList(true)}
+  >
+    <AiOutlineHeart size={30} className="mt-5 ml-3" />
+    <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
+      {wishlist && wishlist.length}
+    </span>
+  </div>
+</div>
                 <RxCross1
                   size={30}
                   className="ml-4 mt-5"
@@ -323,6 +337,13 @@ function Header({ activeHeading }) {
           </div>
         )}
       </div>
+      {openCart && (
+  <Cart setOpenCart={setOpenCart} />
+)}
+
+{openWishList && (
+  <WishList setOpenWishList={setOpenWishList} />
+)}
     </>
   );
 }
