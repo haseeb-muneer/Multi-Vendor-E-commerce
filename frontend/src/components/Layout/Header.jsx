@@ -218,8 +218,8 @@ function Header({ activeHeading }) {
             </Link>
           </div>
           <div>
-            <div className="relative mr-[20px]">
-              <AiOutlineShoppingCart size={30} />
+            <div className="relative mr-[20px] onClick={() => setOpenCart(true)} ">
+              <AiOutlineShoppingCart size={30}  />
               <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 top right text-white font-mono text-[12px] leading-tight text-center ">
                 {cart && cart.length}
               </span>
@@ -232,7 +232,7 @@ function Header({ activeHeading }) {
             <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
               <div className="w-full flex justify-between pr-3">
                 <div>
-                  <div className="relative mr-[15px]">
+                  <div className="relative mr-[15px]" onClick={() => setOpenWishList(true)}>
                     <AiOutlineHeart size={30} className="mt-5 ml-3" />
                     <span className="absolute top-0 right-0 rounded-full bg-[#3bc177] w-4 h-4 top right text-white font-mono text-[12px] leading-tight text-center ">
                       1
