@@ -13,10 +13,10 @@ function Login() {
     const [visible , setVisible]=useState(false);
     const handleSubmit=async(e)=>{
      e.preventDefault();
-     await axios.post(`${server}/user/login-user` , {email , password}  ).then((res)=>{
+     await axios.post(`${server}/user/login-user` , {email , password} , { withCredentials: true}  ).then((res)=>{
         toast.success("Login Successfully!");
         navigate("/");
-        window.location.reload(true);
+        
         console.log(res.data);
      }).catch((err)=>{
         toast.error(err.response.data.message);
