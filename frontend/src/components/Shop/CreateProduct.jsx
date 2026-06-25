@@ -62,9 +62,9 @@ function CreateProduct() {
         <form onSubmit={handleSubmit}>
             <br/>
             <div>
-                <lable className="pb-2">
+                <label className="pb-2">
                     Name <span className='text-red-500'>*</span>
-                </lable>
+                </label>
                   <input
             type="text"
             name="name"
@@ -77,9 +77,9 @@ function CreateProduct() {
             </div>
             <br/>
             <div>
-                <lable className="pb-2">
+                <label className="pb-2">
                     Description <span className='text-red-500'>*</span>
-                </lable>
+                </label>
                     <textarea
             cols="30"
             required
