@@ -21,7 +21,8 @@ function CreateProduct() {
     const [stock , setStock]=useState();
     useEffect(()=>{
      if(error){
-      toast.error(error);
+      toast.error(error.response.data.message);
+       console.log(error);
      }
      if(success){
       toast.success("Product created successfully");
@@ -67,6 +68,7 @@ function CreateProduct() {
                   <input
             type="text"
             name="name"
+            required
             value={name}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setName(e.target.value)}
@@ -123,11 +125,12 @@ function CreateProduct() {
         </div>
         <br/>
          <div>
-          <label className="pb-2">Original Price</label>
+          <label className="pb-2">Original Price <span className="text-red-500">*</span></label>
           <input
             type="number"
             name="price"
             value={originalPrice}
+            required
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
             placeholder="Enter your product price..."
@@ -136,12 +139,13 @@ function CreateProduct() {
         <br/>
          <div>
           <label className="pb-2">
-            Price (With Discount) <span className="text-red-500">*</span>
+            Price (With Discount) 
           </label>
           <input
             type="number"
             name="price"
             value={discountPrice}
+            
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your product price with discount..."
@@ -156,6 +160,7 @@ function CreateProduct() {
             type="number"
             name="price"
             value={stock}
+            required
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
             placeholder="Enter your product stock..."
@@ -172,6 +177,7 @@ function CreateProduct() {
             id="upload"
             className="hidden"
             multiple
+            required
             onChange={handleImageChange}
           />
          <div className='w-full flex items-center flex-wrap'>
